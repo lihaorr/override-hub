@@ -110,10 +110,6 @@ proxy-groups:
       - 个人AI_TikTok
       - 个人节点
       - 机场节点
-      - 省流选择
-      - 高级选择
-      - 中继选择
-      - 落地选择
       - 节点轮询
       - DIRECT
     url: https://www.apple.com/library/test/success.html
@@ -131,26 +127,6 @@ proxy-groups:
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Urltest.png
 
   # 特殊分组
-  - name: 省流选择
-    <<: *Auto
-    filter: *FilterSave
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Urltest.png
-
-  - name: 高级选择
-    <<: *Auto
-    filter: *FilterAdvance
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Urltest.png
-
-  - name: 中继选择
-    <<: *Select
-    filter: *FilterAll
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
-
-  - name: 落地选择
-    <<: *Select
-    filter: *FilterLanding
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
-
   - name: 节点轮询
     <<: *Loadbalance
     filter: *FilterTunnel
@@ -172,7 +148,6 @@ proxy-groups:
     proxies:
       - 个人节点
       - 手动选择
-      - 节点选择
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/OpenAI.png
 
 
@@ -371,7 +346,6 @@ rules:
 
   # AI 规则集 → 个人AI_TikTok（OpenAI/Claude 等）
   - RULE-SET,ai_non_ip,个人AI_TikTok
-
   - RULE-SET,global_non_ip,节点选择
   - RULE-SET,domestic_non_ip,DIRECT
   - RULE-SET,cn,DIRECT
