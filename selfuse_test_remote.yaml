@@ -317,6 +317,7 @@ rule-providers:
 rules:
   ### 优先：TikTok & AI 专用（走个人AI_TikTok）
   - DOMAIN-KEYWORD,tiktok,个人AI_TikTok
+  - DOMAIN-KEYWORD,tiktokshopglobalselling,机场节点
   - DOMAIN-SUFFIX,tiktokcdn.com,个人AI_TikTok
   - DOMAIN-SUFFIX,openai.com,个人AI_TikTok
   - DOMAIN-SUFFIX,ai.com,个人AI_TikTok
