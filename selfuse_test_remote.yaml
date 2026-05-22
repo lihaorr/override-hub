@@ -106,9 +106,9 @@ proxy-groups:
     type: select
     proxies:
       - 自动选择
+      - 个人节点
       - 手动选择
       - 个人AI_TikTok
-      - 个人节点
       - 机场节点
       - 节点轮询
       - DIRECT
