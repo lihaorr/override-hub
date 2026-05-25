@@ -79,13 +79,17 @@ FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客�
 # 个人节点：必须包含 自建 或 Personal
 FilterPersonal: &FilterPersonal '^(?=.*(自建|Personal))(?=.*).*$'
 
+# 全部个人节点，但排除香港直连节点
+# 注意：不会排除「自建MY车1(HK车1中转)」这类落地节点
+FilterPersonalNoHK: &FilterPersonalNoHK '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇭🇰|自建HK|香港|Hong)).*$'
+
 # 机场节点：不包含 自建 / Personal
 FilterAirport: &FilterAirport '^(?=.*(.))(?!.*(自建|Personal)).*$'
 
 # 个人节点按国家拆分
 # 注意：这些都只匹配 自建 / Personal，因此机场节点不会参与
 
-# 香港个人节点：只匹配真正香港直连节点，不匹配 HK车中转后的落地节点
+# 香港个人节点：只匹配真正香港直连节点
 FilterPersonalHK: &FilterPersonalHK '^(?=.*(自建|Personal))(?=.*(🇭🇰|自建HK|香港|Hong))(?!.*(HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬|机场|\[机场HK\])).*$'
 
 # 马来个人节点
@@ -94,7 +98,8 @@ FilterPersonalMY: &FilterPersonalMY '(自建|Personal).*(马来|马来西亚|Mal
 # 泰国个人节点
 FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭)|(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭).*(自建|Personal)'
 
-# 其他国家个人：排除马来、泰国、真正香港直连；但不要排除 HK车中转
+
+# 其他国家个人：排除马来、泰国、香港直连；但保留 HK车中转后的其他国家落地节点
 FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok|🇭🇰|自建HK|香港|Hong)).*$'
 
 # 公共模板
@@ -126,13 +131,8 @@ proxy-groups:
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
 
   - name: 个人节点
-    type: select
-    proxies:
-      - 🇲🇾 马来个人
-      - 🇹🇭 泰国个人
-      - 🌍 其他国家个人
-      - 🇭🇰 香港个人
-      - DIRECT
+    <<: *Select
+    filter: *FilterPersonalNoHK
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
 
   - name: 🇲🇾 马来个人
