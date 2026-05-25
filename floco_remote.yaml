@@ -100,7 +100,7 @@ FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼�
 
 
 # 其他国家个人：排除马来、泰国、香港直连；但保留 HK车中转后的其他国家落地节点
-FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok|🇭🇰|自建HK|香港|Hong)).*$'
+FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
 # 公共模板
 Select: &Select {type: select, url: 'https://www.apple.com/library/test/success.html', disable-udp: false, hidden: false, include-all: true}
@@ -128,7 +128,7 @@ proxy-groups:
   - name: 🇭🇰 香港自动
     <<: *Auto
     filter: *FilterPersonalHK
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
 
   - name: 个人节点
     <<: *Select
@@ -139,24 +139,19 @@ proxy-groups:
     <<: *Select
     filter: *FilterPersonalMY
     exclude-filter: '机场|\[机场HK\]'
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/MY.png
 
   - name: 🇹🇭 泰国个人
     <<: *Select
     filter: *FilterPersonalTH
     exclude-filter: '机场|\[机场HK\]'
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TH.png
 
   - name: 🌍 其他国家个人
     <<: *Select
     filter: *FilterPersonalOther
     exclude-filter: '机场|\[机场HK\]'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
-
-  - name: 🇭🇰 香港个人
-    <<: *Select
-    filter: *FilterPersonalHK
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
 
   - name: 机场节点
     <<: *Select
