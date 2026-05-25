@@ -123,7 +123,7 @@ proxy-groups:
       - 机场节点
       - DIRECT
     url: https://www.apple.com/library/test/success.html
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f310.png
 
   - name: 🇭🇰 香港自动
     <<: *Auto
@@ -133,13 +133,13 @@ proxy-groups:
   - name: 个人节点
     <<: *Select
     filter: *FilterPersonalNoHK
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f464.png
 
   - name: 🇲🇾 马来个人
     <<: *Select
     filter: *FilterPersonalMY
     exclude-filter: '机场|\[机场HK\]'
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/MY.png
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
   - name: 🇹🇭 泰国个人
     <<: *Select
@@ -156,7 +156,7 @@ proxy-groups:
   - name: 机场节点
     <<: *Select
     filter: *FilterAirport
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f6eb.png
 
 
 # ==========================
