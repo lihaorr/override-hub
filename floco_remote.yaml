@@ -101,7 +101,7 @@ FilterPersonalID: &FilterPersonalID '(自建|Personal).*(印尼|印度尼西亚|
 FilterPersonalUS: &FilterPersonalUS '(自建|Personal).*(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸)|(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸).*(自建|Personal)'
 
 # 新加坡个人节点，暂时备用
-FilterPersonalSG: &FilterPersonalSG '(自建|Personal).*(新加坡|狮城|Singapore|SG|🇸🇬)|(新加坡|狮城|Singapore|SG|🇸🇬).*(自建|Personal)'
+#FilterPersonalSG: &FilterPersonalSG '(自建|Personal).*(新加坡|狮城|Singapore|SG|🇸🇬)|(新加坡|狮城|Singapore|SG|🇸🇬).*(自建|Personal)'
 
 # 公共模板
 Select: &Select {type: select, url: 'https://www.apple.com/library/test/success.html', disable-udp: false, hidden: false, include-all: true}
@@ -118,12 +118,11 @@ proxy-groups:
     proxies:
       - 🇭🇰 香港自动
       - 个人节点
-      - 🇭🇰 香港个人
       - 🇲🇾 马来个人
       - 🇹🇭 泰国个人
       - 🇮🇩 印尼个人
       - 🇺🇸 美国个人
-      - 🇸🇬 新加坡个人
+      - 🇭🇰 香港个人
       - 个人AI_TikTok
       - 机场节点
       - DIRECT
@@ -400,41 +399,45 @@ rules:
   - RULE-SET,reject_non_ip_no_drop,REJECT
   - RULE-SET,reject_ip,REJECT
 
-  ### 3. 局域网保留直连
+  ### 3. 局域网 / 国内流量直连，不走代理
+
+  # 局域网
   - RULE-SET,lan_non_ip,DIRECT
   - RULE-SET,lan_ip,DIRECT,no-resolve
 
-  ### 4. 除 WhatsApp / LINE / TikTok 外，其余规则全部走香港自动
+  # 国内域名 / 国内 IP
+  - RULE-SET,domestic_non_ip,DIRECT
+  - RULE-SET,direct_non_ip,DIRECT
+  - RULE-SET,cn,DIRECT
+  - RULE-SET,domestic_ip,DIRECT
+  - RULE-SET,china_ip,DIRECT
 
-  # CDN
-  - RULE-SET,cdn_domainset,🇭🇰 香港自动
-  - RULE-SET,cdn_non_ip,🇭🇰 香港自动
+  # Apple / Microsoft 国内相关，建议直连
+  - RULE-SET,apple_cdn,DIRECT
+  - RULE-SET,apple_cn_non_ip,DIRECT
+  - RULE-SET,microsoft_cdn_non_ip,DIRECT
 
-  # 流媒体
-  - RULE-SET,stream_non_ip,🇭🇰 香港自动
-  - RULE-SET,stream_ip,🇭🇰 香港自动
+  ### 4. 其他需要代理的流量全部走香港自动
+
+  # AI / OpenAI / Claude / Gemini 等
+  - RULE-SET,ai_non_ip,🇭🇰 香港自动
 
   # Telegram
   - RULE-SET,telegram_non_ip,🇭🇰 香港自动
   - RULE-SET,telegram_ip,🇭🇰 香港自动,no-resolve
 
-  # AI / OpenAI / Claude / Gemini 等，按你的新要求也走香港自动
-  - RULE-SET,ai_non_ip,🇭🇰 香港自动
+  # 流媒体
+  - RULE-SET,stream_non_ip,🇭🇰 香港自动
+  - RULE-SET,stream_ip,🇭🇰 香港自动
 
-  # Apple / Microsoft 也走香港自动
-  - RULE-SET,apple_cdn,🇭🇰 香港自动
-  - RULE-SET,apple_cn_non_ip,🇭🇰 香港自动
+  # CDN / 全球站点
+  - RULE-SET,cdn_domainset,🇭🇰 香港自动
+  - RULE-SET,cdn_non_ip,🇭🇰 香港自动
+  - RULE-SET,global_non_ip,🇭🇰 香港自动
+
+  # Apple / Microsoft 非国内服务，如需要代理可以走香港自动
   - RULE-SET,apple_services,🇭🇰 香港自动
-  - RULE-SET,microsoft_cdn_non_ip,🇭🇰 香港自动
   - RULE-SET,microsoft_non_ip,🇭🇰 香港自动
 
-  # 国内 / 直连 / 全球规则，也统一走香港自动
-  - RULE-SET,global_non_ip,🇭🇰 香港自动
-  - RULE-SET,domestic_non_ip,🇭🇰 香港自动
-  - RULE-SET,cn,🇭🇰 香港自动
-  - RULE-SET,direct_non_ip,🇭🇰 香港自动
-  - RULE-SET,domestic_ip,🇭🇰 香港自动
-  - RULE-SET,china_ip,🇭🇰 香港自动
-
-  ### 5. 兜底：除 WhatsApp / LINE / TikTok 外，全部走香港自动
+  ### 5. 兜底
   - MATCH,🇭🇰 香港自动
