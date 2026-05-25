@@ -336,7 +336,7 @@ rules:
   - RULE-SET,stream_non_ip,机场节点
 
   # Telegram → 默认走机场节点
-  - RULE-SET,telegram_non_ip,机场节点
+  - RULE-SET,telegram_non_ip,个人AI_TikTok
 
   # Apple / Microsoft 默认直连
   - RULE-SET,apple_cdn,DIRECT
@@ -357,7 +357,7 @@ rules:
   - RULE-SET,reject_ip,REJECT
 
   # Telegram IP → 机场节点
-  - RULE-SET,telegram_ip,机场节点,no-resolve
+  - RULE-SET,telegram_ip,个人AI_TikTok,no-resolve
 
   # 流媒体 IP → 机场节点
   - RULE-SET,stream_ip,机场节点
