@@ -115,7 +115,6 @@ proxy-groups:
       - 🇹🇭 泰国个人
       - 🌍 其他国家个人
       - 🇭🇰 香港个人
-      - 个人AI_TikTok
       - 机场节点
       - DIRECT
     url: https://www.apple.com/library/test/success.html
@@ -156,18 +155,6 @@ proxy-groups:
     <<: *Select
     filter: *FilterPersonalHK
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
-
-  - name: 个人AI_TikTok
-    type: select
-    proxies:
-      - 节点选择
-      - 个人节点
-      - 🇲🇾 马来个人
-      - 🇹🇭 泰国个人
-      - 🌍 其他国家个人
-      - 🇭🇰 香港个人
-      - DIRECT
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/OpenAI.png
 
   - name: 机场节点
     <<: *Select
@@ -417,9 +404,6 @@ rules:
 
   ### 4. 其他需要代理的流量全部走香港自动
 
-  # AI / OpenAI / Claude / Gemini 等
-  - RULE-SET,ai_non_ip,个人AI_TikTok
-  
   # Telegram
   - RULE-SET,telegram_non_ip,🇭🇰 香港自动
   - RULE-SET,telegram_ip,🇭🇰 香港自动,no-resolve
