@@ -101,7 +101,7 @@ FilterPersonalID: &FilterPersonalID '(自建|Personal).*(印尼|印度尼西亚|
 FilterPersonalUS: &FilterPersonalUS '(自建|Personal).*(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸)|(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸).*(自建|Personal)'
 
 # 新加坡个人节点，暂时备用
-#FilterPersonalSG: &FilterPersonalSG '(自建|Personal).*(新加坡|狮城|Singapore|SG|🇸🇬)|(新加坡|狮城|Singapore|SG|🇸🇬).*(自建|Personal)'
+# FilterPersonalSG: &FilterPersonalSG '(自建|Personal).*(新加坡|狮城|Singapore|SG|🇸🇬)|(新加坡|狮城|Singapore|SG|🇸🇬).*(自建|Personal)'
 
 # 公共模板
 Select: &Select {type: select, url: 'https://www.apple.com/library/test/success.html', disable-udp: false, hidden: false, include-all: true}
@@ -149,7 +149,7 @@ proxy-groups:
     <<: *Select
     filter: *FilterPersonalHK
     exclude-filter: '机场|\[机场HK\]|HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬'
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
 
   - name: 🇲🇾 马来个人
     <<: *Select
@@ -175,11 +175,6 @@ proxy-groups:
     exclude-filter: '机场|\[机场HK\]'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
 
-  - name: 🇸🇬 新加坡个人
-    <<: *Select
-    filter: *FilterPersonalSG
-    exclude-filter: '机场|\[机场HK\]'
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
 
   # WhatsApp / LINE / TikTok 专用组
   # 这几个应用不走香港自动，单独从个人节点/国家组里选
@@ -191,7 +186,6 @@ proxy-groups:
       - 🇹🇭 泰国个人
       - 🇮🇩 印尼个人
       - 🇺🇸 美国个人
-      - 🇸🇬 新加坡个人
       - 🇭🇰 香港个人
       - DIRECT
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/OpenAI.png
