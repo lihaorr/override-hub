@@ -385,6 +385,40 @@ rules:
   - DOMAIN-SUFFIX,muscdn.com,个人AI_TikTok
   - DOMAIN-SUFFIX,byteoversea.com,个人AI_TikTok
   - DOMAIN-SUFFIX,ibytedtos.com,个人AI_TikTok
+  
+  # AI / OpenAI / ChatGPT
+  - DOMAIN-SUFFIX,openai.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,chatgpt.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,oaistatic.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,oaiusercontent.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,ai.com,个人AI_TikTok
+  - DOMAIN-KEYWORD,chatgpt,个人AI_TikTok
+  - DOMAIN-KEYWORD,openai,个人AI_TikTok
+
+  # Claude / Anthropic
+  - DOMAIN-SUFFIX,anthropic.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,claude.ai,个人AI_TikTok
+  - DOMAIN-KEYWORD,claude,个人AI_TikTok
+
+  # Gemini / Google AI
+  - DOMAIN-SUFFIX,gemini.google.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,ai.google.dev,个人AI_TikTok
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,个人AI_TikTok
+  - DOMAIN-KEYWORD,gemini,个人AI_TikTok
+
+  # Perplexity
+  - DOMAIN-SUFFIX,perplexity.ai,个人AI_TikTok
+
+  # Poe
+  - DOMAIN-SUFFIX,poe.com,个人AI_TikTok
+
+  # Cursor / Copilot
+  - DOMAIN-SUFFIX,cursor.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,cursor.sh,个人AI_TikTok
+  - DOMAIN-SUFFIX,githubcopilot.com,个人AI_TikTok
+
+  # AI 规则集
+  - RULE-SET,ai_non_ip,个人AI_TikTok
 
   ### 2. 拒绝类规则
   - RULE-SET,reject_non_ip,REJECT
@@ -414,8 +448,8 @@ rules:
   ### 4. 其他需要代理的流量全部走香港自动
 
   # AI / OpenAI / Claude / Gemini 等
-  - RULE-SET,ai_non_ip,🇭🇰 香港自动
-
+  - RULE-SET,ai_non_ip,个人AI_TikTok
+  
   # Telegram
   - RULE-SET,telegram_non_ip,🇭🇰 香港自动
   - RULE-SET,telegram_ip,🇭🇰 香港自动,no-resolve
