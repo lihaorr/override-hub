@@ -1,0 +1,440 @@
+### 参考自 https://github.com/yyhhyyyyyy/selfproxy
+### 全局配置
+mixed-port: 7897
+allow-lan: true
+mode: rule
+log-level: warning
+ipv6: false
+find-process-mode: strict
+### 如果使用的是裸核，需要将下面的注释去掉，方便ui界面的使用
+# external-controller: 0.0.0.0:9988
+# external-ui: ui
+# external-ui-url: 'https://testingcf.jsdelivr.net/gh/Zephyruso/zashboard@releases/latest/download/dist.zip'
+# secret: "114514yijiuyijiubayiling"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+unified-delay: true
+tcp-concurrent: true
+global-client-fingerprint: chrome
+
+### DNS配置
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  ipv6: false
+  prefer-h3: true
+  enhanced-mode: fake-ip
+  use-hosts: true
+  use-system-hosts: true
+  nameserver:
+    - https://223.5.5.5/dns-query
+    - https://dns.pub/dns-query
+    - https://dns.flymc.cc/dns-query
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter: ['rule-set:fakeip-filter,trackerslist,private,cn']
+  nameserver-policy:
+    {'rule-set:reject_non_ip,reject_domainset,reject_non_ip_drop,reject_non_ip_no_drop': [rcode://success]}
+
+### 域名嗅探
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - dlg.io.mi.com
+    - "+.push.apple.com"
+
+### Tun 配置（按需开启）
+tun:
+  enable: false
+  stack: system
+  device: Ethernet 99
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  strict-route: true
+  mtu: 1500
+  # 如果有使用 zerotier/headscale 等，需要自己配置排除网段
+  # route-exclude-address: ["192.168.110.0/24"]
+
+# ==========================
+# 节点筛选（正则）
+# ==========================
+
+# 基础过滤：过滤套餐、官网、流量、到期、客服等信息节点
+FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|(\b(USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)\b|(\d{4}-\d{2}-\d{2}|\d+G)))).*$'
+
+# 个人 / 机场 区分
+# 个人节点：必须包含 自建 或 Personal
+FilterPersonal: &FilterPersonal '^(?=.*(自建|Personal))(?=.*).*$'
+
+# 机场节点：不包含 自建 / Personal
+FilterAirport: &FilterAirport '^(?=.*(.))(?!.*(自建|Personal)).*$'
+
+# 个人节点按国家拆分
+# 注意：这些都只匹配 自建 / Personal，因此机场节点不会参与
+
+# 香港个人节点：只用于香港直连节点，例如 🇭🇰 自建HK车1 01
+FilterPersonalHK: &FilterPersonalHK '(自建|Personal).*(香港|Hong|HK|🇭🇰)|(香港|Hong|HK|🇭🇰).*(自建|Personal)'
+
+# 马来个人节点：包含自建马来、HK车中转后的马来落地
+FilterPersonalMY: &FilterPersonalMY '(自建|Personal).*(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾)|(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾).*(自建|Personal)'
+
+# 泰国个人节点
+FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭)|(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭).*(自建|Personal)'
+
+# 印尼个人节点
+FilterPersonalID: &FilterPersonalID '(自建|Personal).*(印尼|印度尼西亚|Indonesia|ID|雅加达|Jakarta|🇮🇩)|(印尼|印度尼西亚|Indonesia|ID|雅加达|Jakarta|🇮🇩).*(自建|Personal)'
+
+# 美国个人节点
+FilterPersonalUS: &FilterPersonalUS '(自建|Personal).*(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸)|(美国|美國|美区|United States|USA|US|洛杉矶|Los Angeles|纽约|New York|圣何塞|San Jose|西雅图|Seattle|🇺🇸).*(自建|Personal)'
+
+# 新加坡个人节点，暂时备用
+FilterPersonalSG: &FilterPersonalSG '(自建|Personal).*(新加坡|狮城|Singapore|SG|🇸🇬)|(新加坡|狮城|Singapore|SG|🇸🇬).*(自建|Personal)'
+
+# 公共模板
+Select: &Select {type: select, url: 'https://www.apple.com/library/test/success.html', disable-udp: false, hidden: false, include-all: true}
+Auto: &Auto {type: url-test, url: 'https://www.apple.com/library/test/success.html', interval: 60, tolerance: 50, disable-udp: false, hidden: true, include-all: true}
+Loadbalance: &Loadbalance {type: load-balance, url: 'https://www.apple.com/library/test/success.html', interval: 60, strategy: round-robin, disable-udp: false, hidden: true, include-all: true}
+
+# ==========================
+# 策略组
+# ==========================
+proxy-groups:
+  # 主选择组
+  - name: 节点选择
+    type: select
+    proxies:
+      - 🇭🇰 香港自动
+      - 个人节点
+      - 🇭🇰 香港个人
+      - 🇲🇾 马来个人
+      - 🇹🇭 泰国个人
+      - 🇮🇩 印尼个人
+      - 🇺🇸 美国个人
+      - 🇸🇬 新加坡个人
+      - 个人AI_TikTok
+      - 机场节点
+      - DIRECT
+    url: https://www.apple.com/library/test/success.html
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
+
+  # 其他非 WhatsApp / LINE / TikTok 流量默认走这里
+  # 自动从香港个人节点里测速，哪个快用哪个
+  - name: 🇭🇰 香港自动
+    <<: *Auto
+    filter: *FilterPersonalHK
+    exclude-filter: '机场|\[机场HK\]|HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
+
+  # 保留原来的个人节点总组
+  - name: 个人节点
+    <<: *Select
+    filter: *FilterPersonal
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  # 个人节点按国家拆分，机场节点不参与
+  - name: 🇭🇰 香港个人
+    <<: *Select
+    filter: *FilterPersonalHK
+    exclude-filter: '机场|\[机场HK\]|HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Hongkong.png
+
+  - name: 🇲🇾 马来个人
+    <<: *Select
+    filter: *FilterPersonalMY
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  - name: 🇹🇭 泰国个人
+    <<: *Select
+    filter: *FilterPersonalTH
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  - name: 🇮🇩 印尼个人
+    <<: *Select
+    filter: *FilterPersonalID
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  - name: 🇺🇸 美国个人
+    <<: *Select
+    filter: *FilterPersonalUS
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  - name: 🇸🇬 新加坡个人
+    <<: *Select
+    filter: *FilterPersonalSG
+    exclude-filter: '机场|\[机场HK\]'
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Final.png
+
+  # WhatsApp / LINE / TikTok 专用组
+  # 这几个应用不走香港自动，单独从个人节点/国家组里选
+  - name: 个人AI_TikTok
+    type: select
+    proxies:
+      - 个人节点
+      - 🇲🇾 马来个人
+      - 🇹🇭 泰国个人
+      - 🇮🇩 印尼个人
+      - 🇺🇸 美国个人
+      - 🇸🇬 新加坡个人
+      - 🇭🇰 香港个人
+      - DIRECT
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/OpenAI.png
+
+  # 机场节点保留，但不参与个人国家分组，也不参与香港自动
+  - name: 机场节点
+    <<: *Select
+    filter: *FilterAirport
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
+
+
+# ==========================
+# 规则配置 rule-providers
+# ==========================
+RuleSet_classical: &RuleSet_classical {type: http, behavior: classical, interval: 43200, format: text, proxy: 节点选择}
+RuleSet_domain: &RuleSet_domain {type: http, behavior: domain, interval: 43200, format: text, proxy: 节点选择}
+RuleSet_ipcidr: &RuleSet_ipcidr {type: http, behavior: ipcidr, interval: 43200, format: text, proxy: 节点选择}
+RuleSet_filter: &RuleSet_filter {type: http, behavior: domain, interval: 43200, format: mrs, proxy: 节点选择}
+
+rule-providers:
+  fakeip-filter:
+    <<: *RuleSet_filter
+    url: https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/fakeip-filter.mrs
+    path: ./rule_set/other_ruleset/fakeip-filter.mrs
+
+  cn:
+    <<: *RuleSet_filter
+    url: https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/cn.mrs
+    path: ./rule_set/other_ruleset/cn.mrs
+
+  private:
+    <<: *RuleSet_filter
+    url: https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/private.mrs
+    path: ./rule_set/other_ruleset/private.mrs
+
+  trackerslist:
+    <<: *RuleSet_filter
+    url: https://testingcf.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-ruleset/trackerslist.mrs
+    path: ./rule_set/other_ruleset/trackerslist.mrs
+
+  reject_non_ip_no_drop:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/reject-no-drop.txt
+    path: ./rule_set/sukkaw_ruleset/reject_non_ip_no_drop.txt
+
+  reject_non_ip_drop:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/reject-drop.txt
+    path: ./rule_set/sukkaw_ruleset/reject_non_ip_drop.txt
+
+  reject_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/reject.txt
+    path: ./rule_set/sukkaw_ruleset/reject_non_ip.txt
+
+  reject_domainset:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/domainset/reject.txt
+    path: ./rule_set/sukkaw_ruleset/reject_domainset.txt
+
+  reject_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/ip/reject.txt
+    path: ./rule_set/sukkaw_ruleset/reject_ip.txt
+
+  cdn_domainset:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/domainset/cdn.txt
+    path: ./rule_set/sukkaw_ruleset/cdn_domainset.txt
+
+  cdn_non_ip:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/non_ip/cdn.txt
+    path: ./rule_set/sukkaw_ruleset/cdn_non_ip.txt
+
+  stream_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/stream.txt
+    path: ./rule_set/sukkaw_ruleset/stream_non_ip.txt
+
+  stream_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/ip/stream.txt
+    path: ./rule_set/sukkaw_ruleset/stream_ip.txt
+
+  ai_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/ai.txt
+    path: ./rule_set/sukkaw_ruleset/ai_non_ip.txt
+
+  telegram_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/telegram.txt
+    path: ./rule_set/sukkaw_ruleset/telegram_non_ip.txt
+
+  telegram_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/ip/telegram.txt
+    path: ./rule_set/sukkaw_ruleset/telegram_ip.txt
+
+  apple_cdn:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt
+    path: ./rule_set/sukkaw_ruleset/apple_cdn.txt
+
+  apple_services:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/apple_services.txt
+    path: ./rule_set/sukkaw_ruleset/apple_services.txt
+
+  apple_cn_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/apple_cn.txt
+    path: ./rule_set/sukkaw_ruleset/apple_cn_non_ip.txt
+
+  microsoft_cdn_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt
+    path: ./rule_set/sukkaw_ruleset/microsoft_cdn_non_ip.txt
+
+  microsoft_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/microsoft.txt
+    path: ./rule_set/sukkaw_ruleset/microsoft_non_ip.txt
+
+  download_domainset:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/domainset/download.txt
+    path: ./rule_set/sukkaw_ruleset/download_domainset.txt
+
+  download_non_ip:
+    <<: *RuleSet_domain
+    url: https://ruleset.skk.moe/Clash/non_ip/download.txt
+    path: ./rule_set/sukkaw_ruleset/download_non_ip.txt
+
+  lan_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/lan.txt
+    path: ./rule_set/sukkaw_ruleset/lan_non_ip.txt
+
+  lan_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/ip/lan.txt
+    path: ./rule_set/sukkaw_ruleset/lan_ip.txt
+
+  domestic_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/domestic.txt
+    path: ./rule_set/sukkaw_ruleset/domestic_non_ip.txt
+
+  direct_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/direct.txt
+    path: ./rule_set/sukkaw_ruleset/direct_non_ip.txt
+
+  global_non_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/non_ip/global.txt
+    path: ./rule_set/sukkaw_ruleset/global_non_ip.txt
+
+  domestic_ip:
+    <<: *RuleSet_classical
+    url: https://ruleset.skk.moe/Clash/ip/domestic.txt
+    path: ./rule_set/sukkaw_ruleset/domestic_ip.txt
+
+  china_ip:
+    <<: *RuleSet_ipcidr
+    url: https://testingcf.jsdelivr.net/gh/Seameee/override-hub@refs/heads/main/mergecnip/china_ip.txt
+    path: ./rule_set/other_ruleset/china_ip.txt
+
+
+# ==========================
+# 分流规则 rules
+# ==========================
+rules:
+  ### 1. WhatsApp / LINE / TikTok 单独走个人AI_TikTok，不走香港自动
+
+  # WhatsApp
+  - DOMAIN-SUFFIX,whatsapp.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,whatsapp.net,个人AI_TikTok
+  - DOMAIN-SUFFIX,wa.me,个人AI_TikTok
+  - DOMAIN-KEYWORD,whatsapp,个人AI_TikTok
+
+  # LINE
+  - DOMAIN-SUFFIX,line.me,个人AI_TikTok
+  - DOMAIN-SUFFIX,line-apps.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,line-scdn.net,个人AI_TikTok
+  - DOMAIN-SUFFIX,lin.ee,个人AI_TikTok
+  - DOMAIN-KEYWORD,line,个人AI_TikTok
+
+  # TikTok / TikTok Shop
+  - DOMAIN-KEYWORD,tiktok,个人AI_TikTok
+  - DOMAIN-KEYWORD,tiktokshopglobalselling,个人AI_TikTok
+  - DOMAIN-SUFFIX,tiktok.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,tiktokv.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,tiktokcdn.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,muscdn.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,byteoversea.com,个人AI_TikTok
+  - DOMAIN-SUFFIX,ibytedtos.com,个人AI_TikTok
+
+  ### 2. 拒绝类规则
+  - RULE-SET,reject_non_ip,REJECT
+  - RULE-SET,reject_domainset,REJECT
+  - RULE-SET,reject_non_ip_drop,REJECT-DROP
+  - RULE-SET,reject_non_ip_no_drop,REJECT
+  - RULE-SET,reject_ip,REJECT
+
+  ### 3. 局域网保留直连
+  - RULE-SET,lan_non_ip,DIRECT
+  - RULE-SET,lan_ip,DIRECT,no-resolve
+
+  ### 4. 除 WhatsApp / LINE / TikTok 外，其余规则全部走香港自动
+
+  # CDN
+  - RULE-SET,cdn_domainset,🇭🇰 香港自动
+  - RULE-SET,cdn_non_ip,🇭🇰 香港自动
+
+  # 流媒体
+  - RULE-SET,stream_non_ip,🇭🇰 香港自动
+  - RULE-SET,stream_ip,🇭🇰 香港自动
+
+  # Telegram
+  - RULE-SET,telegram_non_ip,🇭🇰 香港自动
+  - RULE-SET,telegram_ip,🇭🇰 香港自动,no-resolve
+
+  # AI / OpenAI / Claude / Gemini 等，按你的新要求也走香港自动
+  - RULE-SET,ai_non_ip,🇭🇰 香港自动
+
+  # Apple / Microsoft 也走香港自动
+  - RULE-SET,apple_cdn,🇭🇰 香港自动
+  - RULE-SET,apple_cn_non_ip,🇭🇰 香港自动
+  - RULE-SET,apple_services,🇭🇰 香港自动
+  - RULE-SET,microsoft_cdn_non_ip,🇭🇰 香港自动
+  - RULE-SET,microsoft_non_ip,🇭🇰 香港自动
+
+  # 国内 / 直连 / 全球规则，也统一走香港自动
+  - RULE-SET,global_non_ip,🇭🇰 香港自动
+  - RULE-SET,domestic_non_ip,🇭🇰 香港自动
+  - RULE-SET,cn,🇭🇰 香港自动
+  - RULE-SET,direct_non_ip,🇭🇰 香港自动
+  - RULE-SET,domestic_ip,🇭🇰 香港自动
+  - RULE-SET,china_ip,🇭🇰 香港自动
+
+  ### 5. 兜底：除 WhatsApp / LINE / TikTok 外，全部走香港自动
+  - MATCH,🇭🇰 香港自动
