@@ -103,9 +103,9 @@ FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼�
 FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
 # 公共模板
-Select: &Select {type: select, url: 'https://www.apple.com/library/test/success.html', disable-udp: false, hidden: false, include-all: true}
-Auto: &Auto {type: url-test, url: 'https://www.apple.com/library/test/success.html', interval: 60, tolerance: 50, disable-udp: false, hidden: true, include-all: true}
-Loadbalance: &Loadbalance {type: load-balance, url: 'https://www.apple.com/library/test/success.html', interval: 60, strategy: round-robin, disable-udp: false, hidden: true, include-all: true}
+Select: &Select {type: select, url: 'http://cp.cloudflare.com/generate_204', disable-udp: false, hidden: false, include-all: true}
+Auto: &Auto {type: url-test, url: 'http://cp.cloudflare.com/generate_204', interval: 60, tolerance: 50, disable-udp: false, hidden: true, include-all: true}
+Loadbalance: &Loadbalance {type: load-balance, url: 'http://cp.cloudflare.com/generate_204', interval: 60, strategy: round-robin, disable-udp: false, hidden: true, include-all: true}
 
 # ==========================
 # 策略组
@@ -122,7 +122,7 @@ proxy-groups:
       - 🇭🇰 香港个人
       - 机场节点
       - DIRECT
-    url: https://www.apple.com/library/test/success.html
+    url: http://cp.cloudflare.com/generate_204
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f310.png
 
   - name: 🇭🇰 香港自动
