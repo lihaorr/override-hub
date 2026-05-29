@@ -195,21 +195,21 @@ proxy-groups:
 # ==========================
 listeners:
   - name: fp-my1
-    type: socks
+    type: http
     listen: 127.0.0.1
     port: 31001
     udp: true
     proxy: 指纹-MY1
 
   - name: fp-th1
-    type: socks
+    type: http
     listen: 127.0.0.1
     port: 31002
     udp: true
     proxy: 指纹-TH1
 
   - name: fp-id1
-    type: socks
+    type: http
     listen: 127.0.0.1
     port: 31003
     udp: true
