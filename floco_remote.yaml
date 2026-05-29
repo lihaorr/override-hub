@@ -102,6 +102,11 @@ FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼�
 # 其他国家个人：排除马来、泰国、香港直连；但保留 HK车中转后的其他国家落地节点
 FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
+# 指纹浏览器固定节点筛选
+FilterFP_MY1: &FilterFP_MY1 '^(?=.*自建MY1.*H1中转.*01).*$'
+FilterFP_TH1: &FilterFP_TH1 '^(?=.*自建TH1.*H1中转.*01).*$'
+FilterFP_ID2: &FilterFP_ID2 '^(?=.*(自建ID2)).*$'
+
 # 公共模板
 Select: &Select {type: select, url: 'http://cp.cloudflare.com/generate_204', disable-udp: false, hidden: false, include-all: true}
 Auto: &Auto {type: url-test, url: 'http://cp.cloudflare.com/generate_204', interval: 60, tolerance: 50, disable-udp: false, hidden: true, include-all: true}
@@ -157,6 +162,41 @@ proxy-groups:
     <<: *Select
     filter: *FilterAirport
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f6eb.png
+
+
+  # ==========================
+  # 指纹浏览器固定端口策略组
+  # 一个策略组 = 一个固定节点
+  # ==========================
+
+  - name: 指纹-MY1
+    <<: *Select
+    filter: *FilterFP_MY1
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
+
+  - name: 指纹-TH1
+    <<: *Select
+    filter: *FilterFP_TH1
+    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TH.png
+
+# ==========================
+# 指纹浏览器专用本地端口
+# 这些端口不会影响你原来的 7897 正常使用
+# ==========================
+listeners:
+  - name: fp-my1
+    type: mixed
+    listen: 127.0.0.1
+    port: 31001
+    udp: true
+    proxy: 指纹-MY1
+
+  - name: fp-th1
+    type: mixed
+    listen: 127.0.0.1
+    port: 31002
+    udp: true
+    proxy: 指纹-TH1
 
 
 # ==========================
