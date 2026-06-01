@@ -106,6 +106,7 @@ FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|
 FilterFP_MY1: &FilterFP_MY1 '^(?=.*自建MY1.*H1中转.*01).*$'
 FilterFP_TH1: &FilterFP_TH1 '^(?=.*自建TH1.*H1中转.*01).*$'
 FilterFP_ID1: &FilterFP_ID1 '^(?=.*自建ID2.*H2中转.*01).*$'
+FilterFP_US1: &FilterFP_US1 '^(?=.*自建USA1).*$'
 
 # 公共模板
 Select: &Select {type: select, url: 'http://cp.cloudflare.com/generate_204', disable-udp: false, hidden: false, include-all: true}
@@ -188,6 +189,11 @@ proxy-groups:
     <<: *Select
     filter: *FilterFP_ID1
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/ID.png
+    
+  - name: 指纹-US1
+    <<: *Select
+    filter: *FilterFP_US1
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1fa-1f1f8.png
 
 # ==========================
 # 指纹浏览器专用本地端口
@@ -214,6 +220,13 @@ listeners:
     port: 31003
     udp: true
     proxy: 指纹-ID1
+
+  - name: fp-us1
+    type: http
+    listen: 127.0.0.1
+    port: 31004
+    udp: true
+    proxy: 指纹-US1
 
 
 # ==========================
