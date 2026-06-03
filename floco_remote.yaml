@@ -168,6 +168,11 @@ proxy-groups:
     <<: *Select
     filter: *FilterAirport
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f6eb.png
+    
+  - name: 6.6.6.6专用
+    <<: *Select
+    filter: '自建MY1.*H1中转'
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
 
   # ==========================
@@ -396,7 +401,7 @@ rules:
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
   # 6.6.6.6 固定走马来节点
-  - IP-CIDR,6.6.6.6/32,自建MY1(H1中转) 01,no-resolve
+   - IP-CIDR,6.6.6.6/32,6.6.6.6专用,no-resolve
   
   # WhatsApp
   - DOMAIN-SUFFIX,whatsapp.com,节点选择
