@@ -395,6 +395,9 @@ rule-providers:
 rules:
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
+  # 6.6.6.6 固定走马来节点
+  - IP-CIDR,6.6.6.6/32,自建MY1(H1中转) 01,no-resolve
+  
   # WhatsApp
   - DOMAIN-SUFFIX,whatsapp.com,节点选择
   - DOMAIN-SUFFIX,whatsapp.net,节点选择
