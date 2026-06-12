@@ -104,7 +104,7 @@ FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|
 
 # 指纹浏览器固定节点筛选
 FilterFP_MY1: &FilterFP_MY1 '^(?=.*自建MY1.*H1中转.*01).*$'
-FilterFP_TH1: &FilterFP_TH1 '^(?=.*自建TH1.*H1中转.*01).*$'
+FilterFP_TH: &FilterFP_TH '^(?=.*(自建|Personal))(?=.*(🇹🇭|TH|泰国|Thailand|曼谷|Bangkok))(?!.*(机场|\[机场HK\])).*$'
 FilterFP_ID1: &FilterFP_ID1 '^(?=.*自建ID2.*H2中转.*01).*$'
 FilterFP_US1: &FilterFP_US1 '^(?=.*自建USA1).*$'
 
@@ -185,10 +185,10 @@ proxy-groups:
     filter: *FilterFP_MY1
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
-  - name: 指纹-TH1
+  - name: 指纹-泰国
     <<: *Select
-    filter: *FilterFP_TH1
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TH.png
+    filter: *FilterFP_TH
+    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f9-1f1ed.png
     
   - name: 指纹-ID1
     <<: *Select
@@ -212,12 +212,12 @@ listeners:
     udp: true
     proxy: 指纹-MY1
 
-  - name: fp-th1
+  - name: fp-th
     type: http
     listen: 127.0.0.1
     port: 31002
     udp: true
-    proxy: 指纹-TH1
+    proxy: 指纹-泰国
 
   - name: fp-id1
     type: http
