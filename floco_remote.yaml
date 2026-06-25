@@ -400,6 +400,10 @@ rule-providers:
 rules:
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
+  # NodeSeek：单独走 NodeSeek选择，不再落到兜底香港自动
+  - DOMAIN-SUFFIX,nodeseek.com,节点选择
+  - DOMAIN-KEYWORD,nodeseek,节点选择
+  
   # 6.6.6.6 固定走马来节点
   - IP-CIDR,6.6.6.6/32,6.6.6.6专用,no-resolve
   
