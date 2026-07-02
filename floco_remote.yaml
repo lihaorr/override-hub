@@ -403,6 +403,10 @@ rules:
   # NodeSeek：单独走 NodeSeek选择，不再落到兜底香港自动
   - DOMAIN-SUFFIX,nodeseek.com,节点选择
   - DOMAIN-KEYWORD,nodeseek,节点选择
+
+    # google：单独走 google选择，不再落到兜底香港自动
+  - DOMAIN-SUFFIX,google.com,节点选择
+  - DOMAIN-KEYWORD,google,节点选择
   
   # 6.6.6.6 固定走马来节点
   - IP-CIDR,6.6.6.6/32,6.6.6.6专用,no-resolve
