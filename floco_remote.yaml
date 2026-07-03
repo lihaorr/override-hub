@@ -398,6 +398,22 @@ rule-providers:
 # 分流规则 rules
 # ==========================
 rules:
+  # Meta / Facebook / Instagram / Threads：固定走个人节点
+  - DOMAIN-SUFFIX,facebook.com,个人节点
+  - DOMAIN-SUFFIX,facebook.net,个人节点
+  - DOMAIN-SUFFIX,fb.com,个人节点
+  - DOMAIN-SUFFIX,fbcdn.net,个人节点
+  - DOMAIN-SUFFIX,fbsbx.com,个人节点
+  - DOMAIN-SUFFIX,messenger.com,个人节点
+  - DOMAIN-SUFFIX,m.me,个人节点
+  - DOMAIN-SUFFIX,instagram.com,个人节点
+  - DOMAIN-SUFFIX,cdninstagram.com,个人节点
+  - DOMAIN-SUFFIX,threads.net,个人节点
+  - DOMAIN-SUFFIX,meta.com,个人节点
+  - DOMAIN-SUFFIX,meta.ai,个人节点
+  - DOMAIN-KEYWORD,facebook,个人节点
+  - DOMAIN-KEYWORD,instagram,个人节点
+  - DOMAIN-KEYWORD,fbcdn,个人节点
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
   # NodeSeek：单独走 NodeSeek选择，不再落到兜底香港自动
