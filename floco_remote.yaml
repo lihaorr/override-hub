@@ -103,7 +103,7 @@ FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼�
 FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
 # 指纹浏览器固定节点筛选
-FilterFP_MY1: &FilterFP_MY1 '^(?=.*自建MY1.*H1中转.*01).*$'
+FilterFP_MY: &FilterFP_MY '^(?=.*(自建|Personal))(?=.*(🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL))(?!.*(机场|\[机场HK\])).*$'
 FilterFP_TH: &FilterFP_TH '^(?=.*(自建|Personal))(?=.*(🇹🇭|TH|泰国|Thailand|曼谷|Bangkok))(?!.*(机场|\[机场HK\])).*$'
 FilterFP_ID1: &FilterFP_ID1 '^(?=.*自建ID2.*H2中转.*01).*$'
 FilterFP_US1: &FilterFP_US1 '^(?=.*自建USA1).*$'
@@ -180,9 +180,9 @@ proxy-groups:
   # 一个策略组 = 一个固定节点
   # ==========================
 
-  - name: 指纹-MY1
+  - name: 指纹-马来
     <<: *Select
-    filter: *FilterFP_MY1
+    filter: *FilterFP_MY
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
   - name: 指纹-泰国
@@ -205,12 +205,12 @@ proxy-groups:
 # 这些端口不会影响你原来的 7897 正常使用
 # ==========================
 listeners:
-  - name: fp-my1
+  - name: fp-my
     type: http
     listen: 127.0.0.1
     port: 31001
     udp: true
-    proxy: 指纹-MY1
+    proxy: 指纹-马来
 
   - name: fp-th
     type: http
