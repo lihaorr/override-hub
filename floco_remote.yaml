@@ -120,21 +120,15 @@ proxy-groups:
   - name: 节点选择
     type: select
     proxies:
-      - 🇭🇰 香港自动
+      - 🇭🇰 香港个人
       - 个人节点
       - 🇲🇾 马来个人
       - 🇹🇭 泰国个人
       - 🌍 其他国家个人
-      - 🇭🇰 香港个人
       - 机场节点
       - DIRECT
     url: http://cp.cloudflare.com/generate_204
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f310.png
-
-  - name: 🇭🇰 香港自动
-    <<: *Auto
-    filter: *FilterPersonalHK
-    icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/HK.png
 
   - name: 个人节点
     <<: *Select
@@ -416,11 +410,11 @@ rules:
   - DOMAIN-KEYWORD,fbcdn,个人节点
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
-  # NodeSeek：单独走 NodeSeek选择，不再落到兜底香港自动
+  # NodeSeek：单独走 NodeSeek选择，不再落到默认香港手动组
   - DOMAIN-SUFFIX,nodeseek.com,节点选择
   - DOMAIN-KEYWORD,nodeseek,节点选择
 
-    # google：单独走 google选择，不再落到兜底香港自动
+  # Google：单独跟随「节点选择」
   - DOMAIN-SUFFIX,google.com,节点选择
   - DOMAIN-KEYWORD,google,节点选择
   
@@ -500,24 +494,24 @@ rules:
   - RULE-SET,apple_cn_non_ip,DIRECT
   - RULE-SET,microsoft_cdn_non_ip,DIRECT
 
-  ### 4. 其他需要代理的流量全部走香港自动
+  ### 4. 其他需要代理的流量全部走香港手动组
 
   # Telegram
-  - RULE-SET,telegram_non_ip,🇭🇰 香港自动
-  - RULE-SET,telegram_ip,🇭🇰 香港自动,no-resolve
+  - RULE-SET,telegram_non_ip,🇭🇰 香港个人
+  - RULE-SET,telegram_ip,🇭🇰 香港个人,no-resolve
 
   # 流媒体
-  - RULE-SET,stream_non_ip,🇭🇰 香港自动
-  - RULE-SET,stream_ip,🇭🇰 香港自动
+  - RULE-SET,stream_non_ip,🇭🇰 香港个人
+  - RULE-SET,stream_ip,🇭🇰 香港个人
 
   # CDN / 全球站点
-  - RULE-SET,cdn_domainset,🇭🇰 香港自动
-  - RULE-SET,cdn_non_ip,🇭🇰 香港自动
-  - RULE-SET,global_non_ip,🇭🇰 香港自动
+  - RULE-SET,cdn_domainset,🇭🇰 香港个人
+  - RULE-SET,cdn_non_ip,🇭🇰 香港个人
+  - RULE-SET,global_non_ip,🇭🇰 香港个人
 
   # Apple / Microsoft 非国内服务，如需要代理可以走香港自动
-  - RULE-SET,apple_services,🇭🇰 香港自动
-  - RULE-SET,microsoft_non_ip,🇭🇰 香港自动
+  - RULE-SET,apple_services,🇭🇰 香港个人
+  - RULE-SET,microsoft_non_ip,🇭🇰 香港个人
 
   ### 5. 兜底
-  - MATCH,🇭🇰 香港自动
+  - MATCH,🇭🇰 香港个人
