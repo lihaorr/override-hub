@@ -76,37 +76,37 @@ tun:
 FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|(\b(USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)\b|(\d{4}-\d{2}-\d{2}|\d+G)))).*$'
 
 # 个人 / 机场 区分
-# 个人节点：必须包含 自建 或 Personal
-FilterPersonal: &FilterPersonal '^(?=.*(自建|Personal))(?=.*).*$'
+# 个人节点：必须包含 自建 / Personal / 家宽
+FilterPersonal: &FilterPersonal '^(?=.*(自建|Personal|家宽))(?=.*).*$'
 
 # 全部个人节点，但排除香港直连节点
-# 注意：不会排除「自建MY车1(HK车1中转)」这类落地节点
-FilterPersonalNoHK: &FilterPersonalNoHK '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇭🇰|自建HK|香港|Hong)).*$'
+# 注意：不会排除「自建MY车1(HK车1中转)」或「家宽MY1(HK车1中转)」这类落地节点
+FilterPersonalNoHK: &FilterPersonalNoHK '^(?=.*(自建|Personal|家宽))(?!.*(机场|\[机场HK\]|🇭🇰|自建HK|香港|Hong)).*$'
 
-# 机场节点：不包含 自建 / Personal
-FilterAirport: &FilterAirport '^(?=.*(.))(?!.*(自建|Personal)).*$'
+# 机场节点：不包含 自建 / Personal / 家宽
+FilterAirport: &FilterAirport '^(?=.*(.))(?!.*(自建|Personal|家宽)).*$'
 
 # 个人节点按国家拆分
-# 注意：这些都只匹配 自建 / Personal，因此机场节点不会参与
+# 注意：这些都只匹配 自建 / Personal / 家宽，因此机场节点不会参与
 
 # 香港个人节点：只匹配真正香港直连节点
-FilterPersonalHK: &FilterPersonalHK '^(?=.*(自建|Personal))(?=.*(🇭🇰|自建HK|香港|Hong))(?!.*(HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬|机场|\[机场HK\])).*$'
+FilterPersonalHK: &FilterPersonalHK '^(?=.*(自建|Personal|家宽))(?=.*(🇭🇰|自建HK|香港|Hong))(?!.*(HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬|机场|\[机场HK\])).*$'
 
 # 马来个人节点
-FilterPersonalMY: &FilterPersonalMY '(自建|Personal).*(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾)|(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾).*(自建|Personal)'
+FilterPersonalMY: &FilterPersonalMY '(自建|Personal|家宽).*(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾)|(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾).*(自建|Personal|家宽)'
 
 # 泰国个人节点
-FilterPersonalTH: &FilterPersonalTH '(自建|Personal).*(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭)|(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭).*(自建|Personal)'
+FilterPersonalTH: &FilterPersonalTH '(自建|Personal|家宽).*(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭)|(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭).*(自建|Personal|家宽)'
 
 
 # 其他国家个人：排除马来、泰国、香港直连；但保留 HK车中转后的其他国家落地节点
-FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
+FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal|家宽))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
 # 指纹浏览器固定节点筛选
-FilterFP_MY: &FilterFP_MY '^(?=.*(自建|Personal))(?=.*(🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL))(?!.*(机场|\[机场HK\])).*$'
-FilterFP_TH: &FilterFP_TH '^(?=.*(自建|Personal))(?=.*(🇹🇭|TH|泰国|Thailand|曼谷|Bangkok))(?!.*(机场|\[机场HK\])).*$'
-FilterFP_ID1: &FilterFP_ID1 '^(?=.*自建ID2.*H2中转.*01).*$'
-FilterFP_US1: &FilterFP_US1 '^(?=.*自建USA1).*$'
+FilterFP_MY: &FilterFP_MY '^(?=.*(自建|Personal|家宽))(?=.*(🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL))(?!.*(机场|\[机场HK\])).*$'
+FilterFP_TH: &FilterFP_TH '^(?=.*(自建|Personal|家宽))(?=.*(🇹🇭|TH|泰国|Thailand|曼谷|Bangkok))(?!.*(机场|\[机场HK\])).*$'
+FilterFP_ID1: &FilterFP_ID1 '^(?=.*(自建|Personal|家宽)ID2.*H2中转.*01).*$'
+FilterFP_US1: &FilterFP_US1 '^(?=.*(自建|Personal|家宽)USA1).*$'
 
 # 公共模板
 Select: &Select {type: select, url: 'http://cp.cloudflare.com/generate_204', disable-udp: false, hidden: false, include-all: true}
