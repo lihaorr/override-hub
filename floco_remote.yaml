@@ -79,18 +79,14 @@ FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客�
 # 个人节点：必须包含 自建 / Personal / 家宽
 FilterPersonal: &FilterPersonal '^(?=.*(自建|Personal|家宽))(?=.*).*$'
 
-# 全部个人节点，但排除香港直连节点
-# 注意：不会排除「自建MY车1(HK车1中转)」或「家宽MY1(HK车1中转)」这类落地节点
-FilterPersonalNoHK: &FilterPersonalNoHK '^(?=.*(自建|Personal|家宽))(?!.*(机场|\[机场HK\]|🇭🇰|自建HK|香港|Hong)).*$'
+# 全部个人节点：排除香港及名称包含 HK 的中转节点
+FilterPersonalNoHK: &FilterPersonalNoHK '^(?=.*(自建|Personal|家宽))(?!.*(机场|🇭🇰|香港|(?i:HK|Hong\s*Kong))).*$'
 
 # 机场节点：不包含 自建 / Personal / 家宽
 FilterAirport: &FilterAirport '^(?=.*(.))(?!.*(自建|Personal|家宽)).*$'
 
 # 个人节点按国家拆分
 # 注意：这些都只匹配 自建 / Personal / 家宽，因此机场节点不会参与
-
-# 香港个人节点：只匹配真正香港直连节点
-FilterPersonalHK: &FilterPersonalHK '^(?=.*(自建|Personal|家宽))(?=.*(🇭🇰|自建HK|香港|Hong))(?!.*(HK车.*中转|HK中转|中转3|MY|马来|马来西亚|TH|泰国|ID|印尼|印度尼西亚|US|美国|美國|United States|USA|SG|新加坡|🇲🇾|🇹🇭|🇮🇩|🇺🇸|🇸🇬|机场|\[机场HK\])).*$'
 
 # 马来个人节点
 FilterPersonalMY: &FilterPersonalMY '(自建|Personal|家宽).*(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾)|(马来|马来西亚|Malaysia|MY|吉隆坡|Kuala Lumpur|KL|🇲🇾).*(自建|Personal|家宽)'
@@ -99,7 +95,7 @@ FilterPersonalMY: &FilterPersonalMY '(自建|Personal|家宽).*(马来|马来西
 FilterPersonalTH: &FilterPersonalTH '(自建|Personal|家宽).*(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭)|(泰国|Thailand|TH|曼谷|Bangkok|🇹🇭).*(自建|Personal|家宽)'
 
 
-# 其他国家个人：排除马来、泰国、香港直连；但保留 HK车中转后的其他国家落地节点
+# 其他国家个人：排除马来、泰国，且排除香港及 HK 中转节点
 FilterPersonalOther: &FilterPersonalOther '^(?=.*(自建|Personal|家宽))(?!.*(机场|\[机场HK\]|🇲🇾|MY|马来|马来西亚|Malaysia|吉隆坡|Kuala Lumpur|KL|🇹🇭|TH|泰国|Thailand|曼谷|Bangkok)).*$'
 
 # 指纹浏览器固定节点筛选
@@ -120,7 +116,6 @@ proxy-groups:
   - name: 节点选择
     type: select
     proxies:
-      - 🇭🇰 香港个人
       - 个人节点
       - 🇲🇾 马来个人
       - 🇹🇭 泰国个人
@@ -138,36 +133,27 @@ proxy-groups:
   - name: 🇲🇾 马来个人
     <<: *Select
     filter: *FilterPersonalMY
-    exclude-filter: '机场|\[机场HK\]'
+    exclude-filter: '机场|🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
   - name: 🇹🇭 泰国个人
     <<: *Select
     filter: *FilterPersonalTH
-    exclude-filter: '机场|\[机场HK\]'
+    exclude-filter: '机场|🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/TH.png
 
   - name: 🌍 其他国家个人
     <<: *Select
     filter: *FilterPersonalOther
-    exclude-filter: '机场|\[机场HK\]'
+    exclude-filter: '机场|🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
-    
-  - name: 🇭🇰 香港个人
-    <<: *Select
-    filter: *FilterPersonalHK
-    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1ed-1f1f0.png
-    
+        
   - name: 机场节点
     <<: *Select
     filter: *FilterAirport
+    exclude-filter: '🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f6eb.png
     
-  - name: 6.6.6.6专用
-    <<: *Select
-    filter: '自建MY1.*H1中转'
-    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
-
 
   # ==========================
   # 指纹浏览器固定端口策略组
@@ -177,21 +163,25 @@ proxy-groups:
   - name: 指纹-马来
     <<: *Select
     filter: *FilterFP_MY
+    exclude-filter: '🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f2-1f1fe.png
 
   - name: 指纹-泰国
     <<: *Select
     filter: *FilterFP_TH
+    exclude-filter: '🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1f9-1f1ed.png
     
   - name: 指纹-ID1
     <<: *Select
     filter: *FilterFP_ID1
+    exclude-filter: '🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/ID.png
     
   - name: 指纹-US1
     <<: *Select
     filter: *FilterFP_US1
+    exclude-filter: '🇭🇰|香港|(?i:HK|Hong\s*Kong)'
     icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1fa-1f1f8.png
 
 # ==========================
@@ -392,25 +382,25 @@ rule-providers:
 # 分流规则 rules
 # ==========================
 rules:
-  # Meta / Facebook / Instagram / Threads：固定走个人节点
-  - DOMAIN-SUFFIX,facebook.com,个人节点
-  - DOMAIN-SUFFIX,facebook.net,个人节点
-  - DOMAIN-SUFFIX,fb.com,个人节点
-  - DOMAIN-SUFFIX,fbcdn.net,个人节点
-  - DOMAIN-SUFFIX,fbsbx.com,个人节点
-  - DOMAIN-SUFFIX,messenger.com,个人节点
-  - DOMAIN-SUFFIX,m.me,个人节点
-  - DOMAIN-SUFFIX,instagram.com,个人节点
-  - DOMAIN-SUFFIX,cdninstagram.com,个人节点
-  - DOMAIN-SUFFIX,threads.net,个人节点
-  - DOMAIN-SUFFIX,meta.com,个人节点
-  - DOMAIN-SUFFIX,meta.ai,个人节点
-  - DOMAIN-KEYWORD,facebook,个人节点
-  - DOMAIN-KEYWORD,instagram,个人节点
-  - DOMAIN-KEYWORD,fbcdn,个人节点
+  # Meta / Facebook / Instagram / Threads：跟随「节点选择」
+  - DOMAIN-SUFFIX,facebook.com,节点选择
+  - DOMAIN-SUFFIX,facebook.net,节点选择
+  - DOMAIN-SUFFIX,fb.com,节点选择
+  - DOMAIN-SUFFIX,fbcdn.net,节点选择
+  - DOMAIN-SUFFIX,fbsbx.com,节点选择
+  - DOMAIN-SUFFIX,messenger.com,节点选择
+  - DOMAIN-SUFFIX,m.me,节点选择
+  - DOMAIN-SUFFIX,instagram.com,节点选择
+  - DOMAIN-SUFFIX,cdninstagram.com,节点选择
+  - DOMAIN-SUFFIX,threads.net,节点选择
+  - DOMAIN-SUFFIX,meta.com,节点选择
+  - DOMAIN-SUFFIX,meta.ai,节点选择
+  - DOMAIN-KEYWORD,facebook,节点选择
+  - DOMAIN-KEYWORD,instagram,节点选择
+  - DOMAIN-KEYWORD,fbcdn,节点选择
   ### WhatsApp / LINE / TikTok / AI 跟随「节点选择」
 
-  # NodeSeek：单独走 NodeSeek选择，不再落到默认香港手动组
+  # NodeSeek：跟随当前「节点选择」
   - DOMAIN-SUFFIX,nodeseek.com,节点选择
   - DOMAIN-KEYWORD,nodeseek,节点选择
 
@@ -418,8 +408,8 @@ rules:
   - DOMAIN-SUFFIX,google.com,节点选择
   - DOMAIN-KEYWORD,google,节点选择
   
-  # 6.6.6.6 固定走马来节点
-  - IP-CIDR,6.6.6.6/32,6.6.6.6专用,no-resolve
+  # 6.6.6.6 跟随「节点选择」
+  - IP-CIDR,6.6.6.6/32,节点选择,no-resolve
   
   # WhatsApp
   - DOMAIN-SUFFIX,whatsapp.com,节点选择
@@ -494,24 +484,24 @@ rules:
   - RULE-SET,apple_cn_non_ip,DIRECT
   - RULE-SET,microsoft_cdn_non_ip,DIRECT
 
-  ### 4. 其他需要代理的流量全部走香港手动组
+  ### 4. 其他需要代理的流量统一跟随「节点选择」
 
   # Telegram
-  - RULE-SET,telegram_non_ip,🇭🇰 香港个人
-  - RULE-SET,telegram_ip,🇭🇰 香港个人,no-resolve
+  - RULE-SET,telegram_non_ip,节点选择
+  - RULE-SET,telegram_ip,节点选择,no-resolve
 
   # 流媒体
-  - RULE-SET,stream_non_ip,🇭🇰 香港个人
-  - RULE-SET,stream_ip,🇭🇰 香港个人
+  - RULE-SET,stream_non_ip,节点选择
+  - RULE-SET,stream_ip,节点选择
 
   # CDN / 全球站点
-  - RULE-SET,cdn_domainset,🇭🇰 香港个人
-  - RULE-SET,cdn_non_ip,🇭🇰 香港个人
-  - RULE-SET,global_non_ip,🇭🇰 香港个人
+  - RULE-SET,cdn_domainset,节点选择
+  - RULE-SET,cdn_non_ip,节点选择
+  - RULE-SET,global_non_ip,节点选择
 
-  # Apple / Microsoft 非国内服务，如需要代理可以走香港自动
-  - RULE-SET,apple_services,🇭🇰 香港个人
-  - RULE-SET,microsoft_non_ip,🇭🇰 香港个人
+  # Apple / Microsoft 非国内服务跟随「节点选择」
+  - RULE-SET,apple_services,节点选择
+  - RULE-SET,microsoft_non_ip,节点选择
 
   ### 5. 兜底
-  - MATCH,🇭🇰 香港个人
+  - MATCH,节点选择
