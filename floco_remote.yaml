@@ -120,8 +120,9 @@ proxy-groups:
   - name: 节点选择
     type: select
     proxies:
-      - 🇭🇰 香港个人
+      - 中转节点
       - 个人节点
+      - 落地机分组
       - 🇲🇾 马来个人
       - 🇹🇭 泰国个人
       - 🌍 其他国家个人
@@ -153,10 +154,18 @@ proxy-groups:
     exclude-filter: '机场|\[机场HK\]'
     icon: https://testingcf.jsdelivr.net/gh/Orz-3/mini@master/Color/Global.png
     
-  - name: 🇭🇰 香港个人
+  # 入口中转：原有自建HK数字，以及 HK1 / MY1 / SG1 或 HK1中转 / MY1中转 / SG1中转。
+  # 如 MY/SG 中转以“自建”开头，名称须以“中转”结尾，避免与原生落地自建MY1冲突。
+  - name: 中转节点
     <<: *Select
-    filter: *FilterPersonalHK
-    icon: https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f1ed-1f1f0.png
+    filter: '^(?:🇭🇰\s*)?自建HK[0-9]+$|^(?:🇭🇰|🇲🇾|🇸🇬)?\s*(?:自建)?(?:HK|MY|SG)[0-9]+中转$|^(?:🇭🇰|🇲🇾|🇸🇬)?\s*(?:HK|MY|SG)[0-9]+$'
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png
+
+  # 只匹配原生落地；链式节点名带括号中转后缀，不会进入该组。
+  - name: 落地机分组
+    <<: *Select
+    filter: '^(?:🇲🇾|🇹🇭|🇺🇸|🇮🇩|🇸🇬|🇯🇵)?\s*自建(?:MY|TH|US|ID|SG|JP)[0-9]+$'
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Malaysia.png
     
   - name: 机场节点
     <<: *Select
@@ -494,24 +503,25 @@ rules:
   - RULE-SET,apple_cn_non_ip,DIRECT
   - RULE-SET,microsoft_cdn_non_ip,DIRECT
 
-  ### 4. 其他需要代理的流量全部走香港手动组
+  ### 4. 其他需要代理的流量走统一中转节点组
 
   # Telegram
-  - RULE-SET,telegram_non_ip,🇭🇰 香港个人
-  - RULE-SET,telegram_ip,🇭🇰 香港个人,no-resolve
+  - RULE-SET,telegram_non_ip,中转节点
+  - RULE-SET,telegram_ip,中转节点,no-resolve
 
   # 流媒体
-  - RULE-SET,stream_non_ip,🇭🇰 香港个人
-  - RULE-SET,stream_ip,🇭🇰 香港个人
+  - RULE-SET,stream_non_ip,中转节点
+  - RULE-SET,stream_ip,中转节点
 
   # CDN / 全球站点
-  - RULE-SET,cdn_domainset,🇭🇰 香港个人
-  - RULE-SET,cdn_non_ip,🇭🇰 香港个人
-  - RULE-SET,global_non_ip,🇭🇰 香港个人
+  - RULE-SET,cdn_domainset,中转节点
+  - RULE-SET,cdn_non_ip,中转节点
+  - RULE-SET,global_non_ip,中转节点
 
-  # Apple / Microsoft 非国内服务，如需要代理可以走香港自动
-  - RULE-SET,apple_services,🇭🇰 香港个人
-  - RULE-SET,microsoft_non_ip,🇭🇰 香港个人
+  # Apple / Microsoft 非国内服务走统一中转节点组
+  - RULE-SET,apple_services,中转节点
+  - RULE-SET,microsoft_non_ip,中转节点
 
   ### 5. 兜底
   - MATCH,节点选择
+
